@@ -41,6 +41,24 @@ namespace dhcpSzimulacio
             }
         }
 
+        static void BeolvasDictionary(Dictionary<string,string> d, string filenev)
+        {
+            try
+            {
+                StreamReader file = new StreamReader(filenev);
+                while (!file.EndOfStream)
+                {
+                    string[] adatok = file.ReadLine().Split(';');
+                    d.Add(adatok[0], adatok[1]);
+                }
+                file.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         static string CimEggyelNo(string cim)
         {
             /*
@@ -62,21 +80,30 @@ namespace dhcpSzimulacio
             return adatok[0] + "." + adatok[1] + "." + adatok[2] + "." + okt4.ToString();
         }
 
-        static void BeolvasDictionary(Dictionary<string,string> d, string filenev)
+        static void Feladat(string parancs)
         {
-            try
+            /*
+             *  parancs = "request;D19313570A82"
+             *  először csal "request" paranccsal foglalkozunk
+             *  
+             * x Megnézzük, hogy "request"-e
+             *   ki kell szedni a címet a parancsból
+             */
+            if (parancs.Contains("request"))
             {
-                StreamReader file = new StreamReader(filenev);
-                while (!file.EndOfStream)
-                {
-                    string[] adatok = file.ReadLine().Split(';');
-                    d.Add(adatok[0], adatok[1]);
-                }
-                file.Close();
+                Console.WriteLine("Ez oké");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Nem oké");
+            }
+        }
+        
+        static void Feladatok()
+        {
+            foreach (var command in commands)
+            {
+                Feladat(command);
             }
         }
 
@@ -87,10 +114,7 @@ namespace dhcpSzimulacio
             BeolvasDictionary(dhcp, "dhcp.csv");
             BeolvasDictionary(reserved, "reserved.csv");
 
-            foreach (var d in commands)
-            {
-                Console.WriteLine(d);
-            }
+            Feladat();
 
             Console.WriteLine("\nVége...");
             Console.ReadLine();
